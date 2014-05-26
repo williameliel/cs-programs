@@ -1,0 +1,90 @@
+GRAPHS:
+BFS:
+ - minimum no.of hops (shortest path in terms of hops)
+ - two-color graph (bipartite matching)
+ - Finding connected components
+
+DFS:
+ - Topological sort
+ - Finding cycles
+ - Strongly connected components
+
+Shortest Paths:
+
+SP and negative edges:
+dijkstra's cannot detect -ve cycles, because it assumes that vertices are farther from source as the cloud grows. Use bellman ford.
+dijkstra's algorithm doesn't work on directed graph with cycles for the same reason.
+
+graphs with -ve edge cycles dont have shortest paths
+
+detecting -ve edge cycles in bel.ford: Run the algorithm once more and see if there are any other changes.
+
+SP and DAGs:
+- run relax on topo sorted order of vertices
+- dijkstra's can be run on DAGs but for that there shouldn't be any -ve edges.
+  but better to run topo as its faster.
+
+LINKED LIST:
+- Better sometimes to check for termination on no next-element.
+ Helps in cases where you have to delete an element in the middle,
+or in the loop problem where you have to find the meeting point (k steps before start of loop from cracking coding book).
+
+DYNAMIC PROGRAMMING
+- All DP problems have same format.
+  You usually have 2 dimensions to the problem- the sizes of the 2 subsets.
+  You start with last elements of the 2 subsets (of size m, n), perform some operation and store the result
+	or, if you want you look at combinations of slightly smaller subsets (size m-1, n-1) or m, n-1 or m-1,n-1 depending on the problem.
+  Sometimes the dimensions can be a value such as sum (incase of max subset sum, or a price incase of knapsack)
+
+	In all cases, you create a 2D array with rows and columns ONE BIGGER than both the dimensions of the problem
+	and assign default values to the first row and column.
+	For example, if subset size is n, you have to consider the case where the subset is empty.
+
+	For each element, i represents the current size of the subset, for example in knapsack, m[i,w] = max( m[i-1 , w - wt[i-1]] + v[i-1]  , m[i-1,w] ) 
+				Note here that we are looking at the "i-1"th element in the subset which is the last element in the current set of size i.
+					For example, we are looking at wt[i-1] and v[i-1]
+
+SUFFIX TREES
+- Suffix trees can be used to find string in a substring in linear time.
+	* A suffix tree is a trie of all the suffixes of a string
+- Can be used to find longest common substring in linear time (but dynamic programming can also be used to find this in o(m*n) - see dynamic-programming/)
+
+SORTING
+- Merge sort has better locality of reference, can do external sort but requires linear space
+- Heap sort requires only Constant space for sorting, but has poor locality of ref, can't be used for external sort and is bad for large sets
+- Quick sort has poor security (Data set forcing wrong pivot selection can give quadratic perf), worst case time of O(n^2). Simple partioning gives best case time of O(nlogn)
+- Quick sort though is used a lot in the real world because:
+	1. Constant time is required during each iteration
+		- because concat operation is cheap
+	2. Can be done in place with complex algorithm
+	3. Fast when switching to heap sort as soon as recursion depth crossed log(N)
+
+
+
+Segment trees
+-------------
+In segment tree, at every node, you keep track of range you represent (start
+and end), and the results of combining the left and right (such as sum or min).
+The left child represents the range from i,mid.  Right represents from mid+i,j
+
+say for max continuous sum question:  while searching, if you don't have any
+overlap with current node, return 0. If you find partial overlap, then recurs
+search on both children and add result. If you don't overlap at all with
+current node, then return 0.
+
+Interval search trees
+---------------------
+In the interval tree, at every node, you store an interval and the max end point of intervals in that subtree.
+The whole tree is a BST sorted by start of intervals.
+
+while searching for interval overlap for (lo,hi), we check if there is overlap with current node.
+If not, then if left child is Null, we go right.
+Else if left is not NULL,  we check the max value of the left child, if lo < max, then we go left.
+Keep going till we find the interval.
+
+Proofs...
+1. If we go right, then definitely there's no answer in the Left.
+2. If we go left, and we don't find an answer in the left, then there's definitely no answer in the right.
+
+https://www.youtube.com/watch?v=q0QOYtSsTg4
+http://www.geeksforgeeks.org/interval-tree/
