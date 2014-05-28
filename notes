@@ -88,3 +88,19 @@ Proofs...
 
 https://www.youtube.com/watch?v=q0QOYtSsTg4
 http://www.geeksforgeeks.org/interval-tree/
+
+Knap sack problem
+-----------------
+// 0/1 knap sack - element only once
+
+// m[w, n] <--- maximum value
+
+if (wt[n-1] > w)
+  m[w, n] = m[w, n-1]
+else
+  m[w, n] = max( m[w, n-1],  ( m[w - wt[n-1], n-1] + v[n-1] ) )
+
+
+// Unbounded knapsack
+  m[w] = max( for all i with wt[i] <= w, m[w - wt[i]] + v[i] )
+
