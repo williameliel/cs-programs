@@ -3,9 +3,6 @@
 import string
 from string import *
 
-def ati(l, i):
-	return l[len(l) - 1 - i]
-
 def mult(a, b):
 	if len(a) < len(b):
 		t = a
@@ -19,8 +16,8 @@ def mult(a, b):
 		pp = [0] * (len(a) + 1)
 		c = 0
 		for j in range(len(a)):
-			p = (ati(b, i) * ati(a, j)) + c
-			pp[len(pp) - 1 - j] = p % 10
+			p = (b[-1 - i] * a[-1 - j]) + c
+			pp[-1 - j] = p % 10
 			c = p / 10
 		if c != 0:
 			pp[0] = c
@@ -28,12 +25,11 @@ def mult(a, b):
 		# add pp to prod
 		c = 0
 		for j in range(len(pp)):
-			s = ati(pp, j) + prod[len(prod) - 1 - i - j] + c
+			s = pp[-1 - j] + prod[-1 - i - j] + c
 			c = s / 10
-			prod[len(prod) - 1 - i - j] = s % 10
+			prod[-1 - i - j] = s % 10
 		if c != 0:
-			prod[len(prod) - 1 - len(pp) - i] = c
-
+			prod[-1 - len(pp) - i] = c
 	return prod
 
 def listify(a):
