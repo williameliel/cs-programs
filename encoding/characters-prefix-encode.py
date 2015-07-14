@@ -39,7 +39,8 @@ def encode(s):
 		enc = enc + m[c]
 
 	# padding to 8 bits
-	enc = enc + (8-(len(enc)%8)) * "0"
+	if len(enc) > 0:
+		enc = enc + (8-(len(enc)%8)) * "0"
 	
 	# add header
 	hdr = ""
