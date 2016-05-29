@@ -1,63 +1,54 @@
-/*
- * My malloc implementation, untested
- */
+#include<stdio.h>
 
-// Write your own malloc
+#define MAX_HEAP_SIZE 1024
 
-typedef struct {
-	uint32_t size;
+struct hdr {
+	int size;
 	int valid;
-} hdr;
+};
 
-#define HEAP_SIZE 4096
+char mem[MAX_HEAP_SIZE];
 
-uint8_t heap[HEAP_SIZE];
-
-void *malloc(int size)
+void *my_malloc(int size)
 {
-	void *tmp, *prev, *tmp1;
+	struct hdr *cur, *frag;
+	int not_found = 0;
+	int alloc_size;
 
-	if (size % 8)
-		size = ((size / 8) * 8) + 8;
+	cur = (struct hdr *)mem;
 
-	tmp = heap;
-	prev = NULL;
-
-	/* Find a block that's big enough and invalid */
-	while(1) {
-		if (!tmp)
-			break;
-
-		if (!tmp->valid && tmp->size <= size)) {
-			break;
-		}
-
-		prev = tmp;
-		tmp = tmp + sizeof(hdr) + tmp->size;
+	// Find first block that's invalid and big enough
+	while (cur->valid || cur->size < size) {
+		cur = (struct hdr *)((char *)cur + sizeof(struct hdr) + cur->size);
+		if ((char *)cur - mem >= MAX_HEAP_SIZE)
+			return NULL;
 	}
 
-	// Found a block that's empty
-	if (tmp) {
-		tmp->valid = 1;
-		// We have more space in the empty block
-		if (tmp->size != size) {
-			// Create a new empty block
-			tmp1 = tmp + sizeof(hdr) + size;
-			tmp1->valid = 0;
-			tmp1->size = tmp->size - size - sizeof(hdr);
-		}
-		tmp->size = size;
-		return ((void *)(tmp + sizeof(hdr));
+	// do we fragment?
+	if (cur->size - sizeof(struct hdr) - size > 0)
+		alloc_size = size;
+	else
+		alloc_size = cur->size;
+
+	if (alloc_size != cur->size) {
+		// fragment
+		frag = (struct hdr *)((char *)cur + alloc_size + sizeof(struct hdr));
+		frag->valid = 0;
+		frag->size = cur->size - alloc_size - sizeof(struct hdr);
 	}
-
-	// No block found, allocate a new block
-	tmp = prev + sizeof(hdr) + prev->size;
-
-	if ((tmp + sizeof(hdr) + size) - heap > HEAP_SIZE)
-		// out of memory
-		return NULL;
-
-	tmp->size = size;
-	tmp->valid = 1;
-	return tmp + sizeof(hdr);
+	cur->valid = 1;
+	cur->size = alloc_size;
+	return (void *)((char *)cur + sizeof(struct hdr));
 }
+
+int main(void)
+{
+	struct hdr *hdr = (struct hdr *)mem;
+	hdr->size = MAX_HEAP_SIZE - sizeof(struct hdr);
+	printf("1: %p\n", my_malloc(30));
+	printf("2: %p\n", my_malloc(60));
+	printf("3: %p\n", my_malloc(10000));
+	printf("3: %p\n", my_malloc(1));
+}
+
+
