@@ -28,27 +28,29 @@ int check_stream(char *str, int n)
 	for(i = 0; i < n; i++) {
 		pref = get_prefix(str[i]);
 
-		if (nbytes == 0 && pref == CONT_BYTE)
-			return -1;
-		if (nbytes != 0 && pref != CONT_BYTE)
-			return -1;
+		if (nbytes == 0) {
+			// We should receive a normal prefix (1, 2 or 3 bytes) - for next transmit
+			if (pref == CONT_BYTE) return - 1;
+		} else {
+			// We receive a cont prefix
+			if (pref != CONT_BYTE) return -1;
+		}
 
 		switch(pref)
 		{
 			case ONE_BYTE:
-				nbytes = 1;
+				nbytes = 0;
 				break;
 			case TWO_BYTE:
-				nbytes = 2;
+				nbytes = 1;
 				break;
 			case THREE_BYTE:
-				nbytes = 3;
+				nbytes = 2;
 				break;
 			default:
+				nbytes--; // cont
 				break;
 		}
-
-		nbytes--;
 	}
 
 	/* Incomplete stream */
