@@ -1,29 +1,30 @@
 #include<stdio.h>
 #include<string.h>
 
-int substr(char *s, char *ss)
+char *my_strstr(char *s, char *ss)
 {
-	int n, sn, i, j, k;
+	int n, sn, i, j;
 
-	if(!s || !ss) return -1;
+	if(!s || !ss) return NULL;
 
 	n = strlen(s);
 	sn = strlen(ss);
 
 	for(i = 0; i < n; i++) {
-		k = i;
-		j = 0;
-		while(k < n && j < sn && s[k] == ss[j]) { k++; j++; }
+		for(j = 0; j < sn; j++) {
+			if (i + j >= n)
+				return NULL;
+			if (s[i + j] != ss[j])
+				break;
+		}
 
-		if(j == sn)
-			return i;  /* matched */
-		if(i == n)
-			return -1; /* ran out of i (i = n & j < sn) */
+		if (j == sn)
+			return (s + i);
 	}
-	return -1;
+	return NULL;
 }
 
 int main()
 {
-	printf("substr: %s %s = %d\n", "aaab", "axb", substr("aaab", "axb"));
+	printf("strstr: %s %s = %s\n", "ababba", "abb", my_strstr("ababba", "abb"));
 }
