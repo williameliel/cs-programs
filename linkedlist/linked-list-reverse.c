@@ -4,49 +4,11 @@
 
 #include<stdio.h>
 #include<stdlib.h>
+#include "linkedlist.h"
 
-struct node {
-	int n;
-	struct node *next;
-};
-
-struct node *create_node(int a) {
-	struct node *head;
-	head = malloc(sizeof(struct node));
-	if (head) {
-		head->n = a;
-		head->next = NULL;
-	} else {
-		perror("malloc failed\n");
-	}
-	return head;
-}
-
-void print_list(struct node *head) {
-	printf("Printing LL...\n");
-	while(head) {
-		printf("Current element:  %d\n", head->n);
-		head = head->next;
-	}
-	printf("Done...\n");
-}
-
-void create_nodes(struct node *cur) {
-	for(int i = 2; i < 10; i++) {
-		cur->next = create_node(i);
-		if(cur->next) {
-			cur = cur->next;
-		}
-		else {
-			printf("Error: Couldn't create new node\n");
-			exit(1);
-		}
-	}
-}
-
-void skip_k_rev_k(struct node *head, int k)
+void skip_k_rev_k(node_t *head, int k)
 {
-	struct node *prev, *save, *save_skipped_last, *save_rev_first;
+	node_t *prev, *save, *save_skipped_last, *save_rev_first;
 
 	/* Skip k and return if we reach end */
 	for(int i = 0; i < k; i++) {
@@ -85,10 +47,10 @@ void skip_k_rev_k(struct node *head, int k)
 }
 
 int main() {
-	struct node *head;
+	node_t *head;
 	head = create_node(1);
 
-	create_nodes(head);
+	create_nodes(head, 10);
 
 	print_list(head);
 
