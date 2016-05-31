@@ -3,6 +3,9 @@
 // Use DP to find out if left side of tree has one of the nodes
 // and right has one. If so, then the current node is the ancestor
 
+/*
+ * better solution: https://github.com/joelagnel/cs-programs.git
+ */
 
 struct res {
 	int n;
